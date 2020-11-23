@@ -1,0 +1,22 @@
+Models:
+
+books:
+raw file, audio, title,user
+
+favorites:
+books,user
+
+userprofile
+user
+name
+email
+
+explore:
+book
+genre
+image 
+user 
+
+contribute 
+image
+translated text
