@@ -3,6 +3,8 @@
 import os
 from flask import Flask,send_from_directory,request
 from flask_restful import reqparse, abort, Api, Resource
+from werkzeug.utils import secure_filename
+from werkzeug.datastructures import  FileStorage
 from gtts import gTTS
 # will convert the image to text string
 import pytesseract
@@ -17,26 +19,36 @@ import pyttsx3
 app = Flask(__name__)
 api = Api(app)
 pytesseract.pytesseract.tesseract_cmd ='C:/Program Files (x86)/Tesseract-OCR/tesseract.exe'
+UPLOAD_FOLDER = 'files'
+AUDIO_FOLDER = 'audio'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg'])
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['AUDIO_FOLDER'] = AUDIO_FOLDER
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 class ConvertToAudio(Resource):
     def post(self):
-        file=request.files.get("file")
-        file_name=file.name
+        file = request.files['file']
         rename=request.form.get("name")
-        name=rename+".mp3"
-        if file:
-            if os.path.splitext(file_name)[1] == ["jpg","jpeg","png"]:
-                file.save()
+        if file and allowed_file(file.filename):
+            # From flask uploading tutorial
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            name=rename+".mp3"
+            print(os.path.splitext(filename)[1])
+            if os.path.splitext(filename)[1] in [".jpg",".jpeg",".png"]:
                 img = Image.open(file)
                 # converts the image to result and saves it into result variable
                 result = pytesseract.image_to_string(img)
                 # write text in a text file and save it to source path
                 myAudio = gTTS(text=result, lang="en", slow=False)
                 #Save as mp3 file
-                myAudio.save(name)
-                return "hello", 201
-            elif  os.path.splitext(file_name)[1] == ["pdf","txt"]:
+                myAudio.save(os.path.join(app.config['AUDIO_FOLDER'],name))
+                return "saved audio from image", 201
+            elif  os.path.splitext(filename)[1] in [".pdf",".txt"]:
                 file.save()
                 text = extract_text(file)
                 new_text=text.replace("(cid:10)","")
@@ -46,7 +58,9 @@ class ConvertToAudio(Resource):
 
                 #Save as mp3 file
                 myAudio.save(name)
-                return send_from_directory(myAudio)
+                return "saved audio from pdf",201
+            else:
+                return "file not supported", 204
         else:
             return "No file found", 404
 
