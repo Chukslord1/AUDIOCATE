@@ -38,7 +38,6 @@ class ConvertToAudio(Resource):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             name=rename+".mp3"
-            print(os.path.splitext(filename)[1])
             if os.path.splitext(filename)[1] in [".jpg",".jpeg",".png"]:
                 img = Image.open(file)
                 # converts the image to result and saves it into result variable
@@ -49,15 +48,13 @@ class ConvertToAudio(Resource):
                 myAudio.save(os.path.join(app.config['AUDIO_FOLDER'],name))
                 return "saved audio from image", 201
             elif  os.path.splitext(filename)[1] in [".pdf",".txt"]:
-                file.save()
                 text = extract_text(file)
                 new_text=text.replace("(cid:10)","")
-                print(new_text)
                 #Call GTTS
                 myAudio = gTTS(text=new_text, lang="en", slow=False)
 
                 #Save as mp3 file
-                myAudio.save(name)
+                myAudio.save(os.path.join(app.config['AUDIO_FOLDER'],name))
                 return "saved audio from pdf",201
             else:
                 return "file not supported", 204
