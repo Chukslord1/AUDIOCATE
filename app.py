@@ -15,7 +15,7 @@ from PIL import Image
 import io
  # converts the text to speech
 import pyttsx3
-from models import User,db
+
 
 app = Flask(__name__)
 api = Api(app)
@@ -25,14 +25,6 @@ AUDIO_FOLDER = 'audio'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['AUDIO_FOLDER'] = AUDIO_FOLDER
-
-#db.create_all()
-#admin = User(username='ochuko', email='chukslordz1@example.com')
-#admin.set_password('Godisjesus1@1')
-#db.session.add(admin)
-#db.session.commit()
-u= User.query.filter_by(email="chukslordz1@example.com").first()
-u.check_password('Godisjesus1@1')
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -47,6 +39,7 @@ class ConvertToAudio(Resource):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             name=rename+".mp3"
+            
             if os.path.splitext(filename)[1] in [".jpg",".jpeg",".png"]:
                 img = Image.open(file)
                 # converts the image to result and saves it into result variable
