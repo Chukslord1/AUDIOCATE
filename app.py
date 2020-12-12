@@ -21,7 +21,7 @@ app = Flask(__name__)
 api = Api(app)
 pytesseract.pytesseract.tesseract_cmd ='C:/Program Files (x86)/Tesseract-OCR/tesseract.exe'
 UPLOAD_FOLDER = 'files'
-AUDIO_FOLDER = 'audio'
+AUDIO_FOLDER = 'static'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg'])
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['AUDIO_FOLDER'] = AUDIO_FOLDER
@@ -36,40 +36,33 @@ class ConvertToAudio(Resource):
         parse = reqparse.RequestParser()
         parse.add_argument('file', type=werkzeug.datastructures.FileStorage, location='files')
         args = parse.parse_args()
-        file = args['file']
-        try:
-            if file and allowed_file(file.filename):
-                # From flask uploading tutorial
-                filename = secure_filename(file.filename)
-                name=rename+".mp3"
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-                if os.path.splitext(filename)[1] in [".jpg",".jpeg",".png"]:
-                    img = Image.open(file)
-                    # converts the image to result and saves it into result variable
-                    result = pytesseract.image_to_string(img)
-                    # write text in a text file and save it to source path
-                    myAudio = gTTS(text=result, lang="en", slow=False)
-                    #Save as mp3 file
-                    myAudio.save(os.path.join(app.config['AUDIO_FOLDER'],name))
-                    url=url_for("static", filename=name)
-                    return jsonify({"success": True, "url": url})
-                elif  os.path.splitext(filename)[1] in [".pdf"]:
-                    text = extract_text(file)
-                    new_text=text.replace("(cid:10)","")
-                    #Call GTTS
-                    myAudio = gTTS(text=new_text, lang="en", slow=False)
+        file = request.files.get("file")
+        filename = secure_filename(file.filename)
+        name=rename+".mp3"
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+        if os.path.splitext(filename)[1] in [".jpg",".jpeg",".png"]:
+            img = Image.open(file)
+            # converts the image to result and saves it into result variable
+            result = pytesseract.image_to_string(img)
+            # write text in a text file and save it to source path
+            myAudio = gTTS(text=result, lang="en", slow=False)
+            #Save as mp3 file
+            myAudio.save(os.path.join(app.config['AUDIO_FOLDER'],name))
+            url=url_for("static", filename=name)
+            return jsonify({"success": True, "url": url})
+        elif  os.path.splitext(filename)[1] in [".pdf"]:
+            text = extract_text(file)
+            new_text=text.replace("(cid:10)","")
+            #Call GTTS
+            myAudio = gTTS(text=new_text, lang="en-uk", slow=False)
 
-                    #Save as mp3 file
-                    myAudio.save(os.path.join(app.config['AUDIO_FOLDER'],name))
-                    url=url_for("static", filename=name)
-                    return jsonify({"success": True, "url": url})
-                else:
-                    return "file not supported", 204
-            else:
-                return "No file found", 404
-        except Exception as e:
-            print(e)
-            return "error",404
+            #Save as mp3 file
+            myAudio.save(os.path.join(app.config['AUDIO_FOLDER'],name))
+            url=url_for("static", filename=name)
+            return jsonify({"success": True, "url": url})
+        else:
+            return "file not supported", 204
+
 
  # opening an image from the source path
 

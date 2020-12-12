@@ -1,11 +1,12 @@
 {% load static %}
 
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
  <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" rel="stylesheet"/>
+  <link crossorigin="anonymous" href="{% static 'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' %}" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" rel="stylesheet"/>
   <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css"/>
   <link href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css"/>
   <link href="https://fonts.googleapis.com/css2?family=Rubik&amp;display=swap" rel="stylesheet"/>
@@ -43,37 +44,37 @@
     </nav>
     <div class="login-container">
      <img alt="reader" class="hero" src="{% static './images/male-reader.jpg' %}" width="100px"/>
-     <form method="POST" class="user-login">
-       {% csrf_token %}
+     <form class="user-login" method="POST">
+      {% csrf_token %}
       <h1 class="header-text">
        User Register
       </h1>
       <div class="email-input">
        <i class="fa">
        </i>
-       <input class="container-fluid" placeholder="Full name" name="name" type="text"/>
+       <input class="container-fluid" name="name" placeholder="Full name" type="text"/>
       </div>
       <div class="email-input">
        <i class="fa">
-         Date of Birth
+        Date of Birth
        </i>
        <input class="container-fluid" name="dob" type="date"/>
       </div>
       <div class="email-input">
        <i class="fa">
        </i>
-       <input class="container-fluid" placeholder="PhoneNumber" name="phone" type="text"/>
+       <input class="container-fluid" name="phone" placeholder="PhoneNumber" type="text"/>
       </div>
       <div class="email-input">
        <i class="fa">
        </i>
-       <input class="container-fluid" placeholder="Email" name="email" type="email"/>
+       <input class="container-fluid" name="email" placeholder="Email" type="email"/>
       </div>
       <div class="password-input">
-       <input class="container-fluid" min="6" placeholder="Password" type="password" name="password"/>
+       <input class="container-fluid" min="6" name="password" placeholder="Password" type="password"/>
       </div>
       <div class="password-input">
-       <input class="container-fluid" min="6" placeholder="Confirm Password" type="password" name="password"/>
+       <input class="container-fluid" min="6" name="password" placeholder="Confirm Password" type="password"/>
       </div>
       <div class="login">
        <input class="container-fluid" type="submit" value="Register"/>

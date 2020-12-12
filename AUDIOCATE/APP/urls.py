@@ -9,8 +9,12 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("homepage.html", views.index, name="index"),
     path("index.html", views.login, name="login"),
-    path("Home.html", views.convert, name="convert"),
+    path("login.html", views.login, name="login"),
+    path("convert.html", views.convert, name="convert"),
+    path("dashboard.html", views.dashboard, name="dashboard"),
+    path("mybooks.html", views.mybooks, name="mybooks"),
     path("register.html", views.register, name="register"),
+    path("genre.html", views.genre, name="genre"),
 
 
 
