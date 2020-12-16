@@ -56,7 +56,7 @@
         </a>
        </li>
        <li class="nav-item">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="explore.html">
          <i class="ni ni-pin-3 text-primary">
          </i>
          <span class="nav-link-text">
@@ -65,7 +65,16 @@
         </a>
        </li>
        <li class="nav-item">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="featured.html">
+         <i class="ni ni-pin-3 text-primary">
+         </i>
+         <span class="nav-link-text">
+          Featured
+         </span>
+        </a>
+       </li>
+       <li class="nav-item">
+        <a class="nav-link" href="contribute.html">
          <i class="ni ni-single-02 text-yellow">
          </i>
          <span class="nav-link-text">
@@ -83,7 +92,7 @@
         </a>
        </li>
        <li class="nav-item">
-        <a class="nav-link" href="{% url 'APP:login' %}">
+        <a class="nav-link" href="login.html">
          <i class="ni ni-key-25 text-info">
          </i>
          <span class="nav-link-text">
@@ -101,11 +110,11 @@
         </a>
        </li>
        <li class="nav-item">
-        <a class="nav-link" href="">
+        <a class="nav-link" href="settings.html">
          <i class="ni ni-send text-dark">
          </i>
          <span class="nav-link-text">
-          Settings
+          Profile
          </span>
         </a>
        </li>
@@ -142,11 +151,11 @@
         <a aria-expanded="false" aria-haspopup="true" class="nav-link pr-0" data-toggle="dropdown" href="#" role="button">
          <div class="media align-items-center">
           <span class="avatar avatar-sm rounded-circle">
-           <img alt="Image placeholder" src="{% static './assets/img/theme/team-4.jpg' %}"/>
+           <img alt="Image placeholder" src="{% if user.profile.image %}{{user.profile.image.url}}{% else %}{% static 'assets/img/theme/team-4.jpg' %}{% endif %}"/>
           </span>
           <div class="media-body ml-2 d-none d-lg-block">
            <span class="mb-0 text-sm font-weight-bold">
-            John Snow
+            {{user.username}}
            </span>
           </div>
          </div>
@@ -208,15 +217,20 @@
            <th class="sort" data-sort="name" scope="col">
             Genre
            </th>
-           <th scope="col">
-            User
-           </th>
            <th class="sort" data-sort="name" scope="col">
             View
            </th>
           </tr>
          </thead>
          <tbody class="list">
+           {% for item in genre %}
+           <script>
+           function view{{item.name}}(){
+             var value= "{{item.name}}";
+             window.location.href="{% url 'APP:genre_all' %}" + "?genre=" + value;
+           }
+           </script>
+
           <tr>
            <th scope="row">
             <div class="media align-items-center">
@@ -225,29 +239,23 @@
              </a>
              <div class="media-body">
               <span class="name mb-0 text-sm">
-               Argon Design System
+               {{item.name}}
               </span>
              </div>
             </div>
            </th>
            <td>
-            <div class="avatar-group">
-             <a class="avatar avatar-sm rounded-circle" data-original-title="Ryan Tompson" data-toggle="tooltip" href="#">
-              <img alt="Image placeholder" src="{% static './assets/img/theme/team-1.jpg' %}"/>
-             </a>
-            </div>
-           </td>
-           <td>
             <div class="d-flex align-items-center">
              <div>
-                <a class="btn btn-primary btn-lg" type="submit">
+                <button class="btn btn-primary btn-lg" onclick="view{{item.name}}()">
                  View all
-                </a>
+               </button>
               </div>
              </div>
             </div>
            </td>
           </tr>
+          {% endfor %}
          </tbody>
         </table>
        </div>
@@ -262,9 +270,23 @@
        <div class="copyright text-center text-lg-left text-muted">
         © 2020
         <a class="font-weight-bold ml-1" href="https://www.creative-tim.com" target="_blank">
-         Team Green
+         TEAM GREEN
         </a>
        </div>
+      </div>
+      <div class="col-lg-6">
+       <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+        <li class="nav-item">
+         <a class="nav-link" href="" target="_blank">
+          Creative Tim
+         </a>
+        </li>
+        <li class="nav-item">
+         <a class="nav-link" href="" target="_blank">
+          MIT License
+         </a>
+        </li>
+       </ul>
       </div>
      </div>
     </footer>
@@ -283,7 +305,7 @@
   <script src="{% static './assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js' %}">
   </script>
   <!-- Argon JS -->
-  <script src="{% static './assets/js/argon.js?v=1.2.0' %}">
+  <script src="{% static './assets/js/argon.js' %}">
   </script>
  </body>
 </html>
